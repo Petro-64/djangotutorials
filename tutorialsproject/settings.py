@@ -11,12 +11,20 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+<<<<<<< HEAD
 import os
 import sys
 import dj_database_url
 
 
 
+=======
+import sys
+import os
+import dj_database_url
+
+
+>>>>>>> bf4cab43bc9833ebca2d7fae98de5b38b30e7230
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -25,12 +33,20 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+<<<<<<< HEAD
 SECRET_KEY = 'django-insecure-jqos-%$!y&@0tizvjqrv1*&2rw_r)iz()ul8$c$$58=_ds2nar'
+=======
+SECRET_KEY = 'django-insecure-h=w9h_0*s9agj7a_981dyt*ynz@l^$s#+yq!v*)ybehr*98u(v'
+>>>>>>> bf4cab43bc9833ebca2d7fae98de5b38b30e7230
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+<<<<<<< HEAD
 ALLOWED_HOSTS = ['165.227.41.227']
+=======
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost','tutorialsproject.localhost']
+>>>>>>> bf4cab43bc9833ebca2d7fae98de5b38b30e7230
 
 
 # Application definition
@@ -87,6 +103,10 @@ DATABASES = {
     }
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> bf4cab43bc9833ebca2d7fae98de5b38b30e7230
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
@@ -111,7 +131,11 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
+<<<<<<< HEAD
 TIME_ZONE = 'America/New_York'
+=======
+TIME_ZONE = 'UTC'
+>>>>>>> bf4cab43bc9833ebca2d7fae98de5b38b30e7230
 
 USE_I18N = True
 
@@ -124,8 +148,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
+<<<<<<< HEAD
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
+=======
+STATIC_ROOT = os.path.join(BASE_DIR, "static/")
+>>>>>>> bf4cab43bc9833ebca2d7fae98de5b38b30e7230
 
 
 # Default primary key field type
