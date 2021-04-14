@@ -6,4 +6,7 @@ class Subject(models.Model):
     pub_date = models.DateTimeField('date published')
     categories_number = models.IntegerField(default=0)
     is_active = models.BooleanField(default=False)
+
+    def __str__(self):
+      return self.subject_text
 # Create your models here.
