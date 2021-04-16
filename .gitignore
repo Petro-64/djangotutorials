@@ -1,1 +1,4 @@
 tutorialsproject/settings.py
+tutorialsproject/__pycache__/
+../migrations/
+../__pycache__/
