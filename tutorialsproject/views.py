@@ -9,3 +9,6 @@ def index(request):
 
 def about(request):
     return HttpResponse("You're at the about.")
+
+def contact(request):
+    return render(request, 'contact.html', {})

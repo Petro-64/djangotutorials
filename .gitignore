@@ -2,4 +2,5 @@ tutorialsproject/settings.py
 tutorialsproject/__pycache__/
 ../migrations/
 ../__pycache__/
+subjects/__pycache__/
 *.txt
