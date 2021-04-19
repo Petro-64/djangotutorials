@@ -13,5 +13,5 @@ def about(request):
 def contact(request):
     return render(request, 'contact.html', {})
 
-def blog(request):
+def blog(request, id=None):
     return render(request, 'blog.html', {})

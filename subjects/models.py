@@ -6,6 +6,7 @@ class Subject(models.Model):
     pub_date = models.DateTimeField('date published')
     categories_number = models.IntegerField(default=0)
     is_active = models.BooleanField(default=False)
+    url_friendly_text = models.CharField(max_length=30, default='subject_name')
 
     def __str__(self):
       return self.subject_text
