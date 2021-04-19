@@ -8,7 +8,10 @@ def index(request):
 
 
 def about(request):
-    return HttpResponse("You're at the about.")
+    return render(request, 'about.html', {})
 
 def contact(request):
     return render(request, 'contact.html', {})
+
+def blog(request):
+    return render(request, 'blog.html', {})
