@@ -1,6 +1,10 @@
 tutorialsproject/settings.py
 tutorialsproject/__pycache__/
-../migrations/
+subjects/migrations/
+categories/migrations/
+categories/migrations/__pycache__/
+subjects/migrations/__pycache__
 ../__pycache__/
 subjects/__pycache__/
+categories/__pycache__/
 *.txt
