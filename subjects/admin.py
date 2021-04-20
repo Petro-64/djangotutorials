@@ -1,7 +1,14 @@
 from django.contrib import admin
-
-
 from .models import Subject
 
-admin.site.register(Subject)
-# Register your models here.
+
+
+
+class SubjectAdmin(admin.ModelAdmin):
+    #exclude = ('url_friendly_text', )
+    list_display = ('subject_text', 'pub_date', 'categories_number', )
+    list_filter = ('pub_date', )    
+
+
+admin.site.register(Subject, SubjectAdmin)
+
