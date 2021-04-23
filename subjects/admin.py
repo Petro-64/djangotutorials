@@ -18,6 +18,7 @@ class SubjectAdminForm(forms.ModelForm):
         model = Subject
         fields = "__all__"
 
+    #kinda validation
     def clean_subject_text(self):
         if self.cleaned_data["subject_text"] == "Spike":
             raise forms.ValidationError("Spike is forbidden")
