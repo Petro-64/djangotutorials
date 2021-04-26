@@ -6,7 +6,7 @@ class Tutorial(models.Model):
     category = models.ForeignKey(category.Catergory, on_delete=models.CASCADE, default=1)
     tutorial_text = models.CharField(max_length=30)
     is_active = models.BooleanField(default=False)
-    url_friendly_text = models.CharField(max_length=30, default='url-friendly-tutorial-name')
+    url_friendly_text = models.CharField(max_length=50, default='url-friendly-tutorial-name')
     created_by = models.CharField(max_length=30, default='admin')
     views = models.IntegerField(default=0)
     def __str__(self):
