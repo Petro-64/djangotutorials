@@ -31,9 +31,10 @@ $(function () {
     getCategories(ii)
   });
   //////   getCategories/<int:key_id>
-  $("select#id_subjectToChoose").on("change", function () {
+  $("#id_subjectToChoose").on("change", function () {
     getCategories($(this).val())
   })
+  $(".related-widget-wrapper-link").hide();
 });
 </script>
 {{ media }}

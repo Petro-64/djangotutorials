@@ -12,4 +12,11 @@ class Tutorial(models.Model):
     def __str__(self):
       return self.tutorial_text
 
+class Contentblock(models.Model):
+    description = models.CharField(max_length=30)
+    is_visible = models.BooleanField(default=False)
+    def __str__(self):
+      return self.tutorial_text
+
+
 # Create your models here.
