@@ -8,3 +8,5 @@ subjects/migrations/__pycache__
 subjects/__pycache__/
 categories/__pycache__/
 *.txt
+tutorials/__pycache__/
+tutorials/migrations/
