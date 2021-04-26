@@ -24,4 +24,6 @@ urlpatterns = [
     path('about/', views.about, name='about'),
     path('contact/', views.contact, name='contact'),
     path('blog/', views.blog, name='blog'),
+    path('getSubjects/', views.get_subject),
+    path('getCategories/<int:key_id>', views.get_categories),
 ]
