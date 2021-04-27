@@ -6,9 +6,15 @@ class Tutorial(models.Model):
     category = models.ForeignKey(category.Catergory, on_delete=models.CASCADE, default=1)
     tutorial_text = models.CharField(max_length=30)
     is_active = models.BooleanField(default=False)
-    url_friendly_text = models.CharField(max_length=50, default='url-friendly-tutorial-name')
+    url_friendly_text = models.CharField(max_length=50)
     created_by = models.CharField(max_length=30, default='admin')
     views = models.IntegerField(default=0)
+
+    def save(self, *args, **kwargs): # new
+        if not self.url_friendly_text:
+            self.url_friendly_text = slugify(self.tutorial_text)
+        return super().save(*args, **kwargs)
+
     def __str__(self):
       return self.tutorial_text
 

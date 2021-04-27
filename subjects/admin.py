@@ -29,6 +29,7 @@ class SubjectAdmin(admin.ModelAdmin):
     form = SubjectAdminForm
     list_display = ('subject_text', 'pub_date', 'is_active', 'categories_number', )
     list_filter = ('pub_date', ) 
+    prepopulated_fields = {'url_friendly_text': ('subject_text',)}
     actions = [make_active, make_unactive]  
     #defining search 
     search_fields = ("subject_text__startswith", )

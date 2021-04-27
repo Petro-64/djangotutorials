@@ -19,6 +19,7 @@ class TutorialAdmin(admin.ModelAdmin):
     form = TutorialAdminForm
     list_display = ('tutorial_text', 'category', 'is_active', 'created_by' )
     list_filter = ('category', )
+    prepopulated_fields = {'url_friendly_text': ('tutorial_text',)}
 
 
 class ContentblockAdmin(admin.ModelAdmin):
