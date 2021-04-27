@@ -16,7 +16,7 @@ class Contentblock(models.Model):
     description = models.CharField(max_length=30)
     is_visible = models.BooleanField(default=False)
     def __str__(self):
-      return self.tutorial_text
+      return self.description
 
 
-# Create your models here.
+

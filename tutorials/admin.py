@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Tutorial
+from .models import Tutorial, Contentblock
 from django import forms
 
 class TutorialAdminForm(forms.ModelForm):
@@ -7,21 +7,25 @@ class TutorialAdminForm(forms.ModelForm):
         model = Tutorial
         fields = "__all__"
 
-@admin.register(Tutorial)
+class ContentblockAdminForm(forms.ModelForm):
+    class Meta:
+        model = Contentblock
+        fields = "__all__"
+
 
 
 class TutorialAdmin(admin.ModelAdmin):
+    change_form_template = 'admin/tutorials/my_change_form.html'
     form = TutorialAdminForm
     list_display = ('tutorial_text', 'category', 'is_active', 'created_by' )
-    #list_display = ['category']
-    #readonly_fields = ['category']
-    #pub_date = models.DateTimeField(auto_now_add = True)
-    #category = models.ForeignKey(category.Catergory, on_delete=models.CASCADE, default=1)
-    #tutorial_text = models.CharField(max_length=30)
-    #is_active = models.BooleanField(default=False)
-    #url_friendly_text = models.CharField(max_length=50, default='url-friendly-tutorial-name')
-    #created_by = models.CharField(max_length=30, default='admin')
-    #views = models.IntegerField(default=0)
-    pass
+    list_filter = ('category', )
+
+
+class ContentblockAdmin(admin.ModelAdmin):
+    form = ContentblockAdminForm
+    list_display = ('description', 'is_visible')
+
+admin.site.register(Tutorial, TutorialAdmin )
+admin.site.register(Contentblock )
 
 
