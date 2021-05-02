@@ -37,4 +37,15 @@ class Contentblock(models.Model):
       return self.description
 
 
+class Contentcontent(models.Model):
+    content = models.CharField(max_length=3000)
+    is_visible = models.BooleanField(default=False)
+    tutorial = models.ForeignKey(Tutorial, on_delete=models.CASCADE, default=1)
+    contentblock = models.ForeignKey(Contentblock, on_delete=models.CASCADE, default=1)
+    order = models.IntegerField(default=0)
+    def __str__(self):
+      return self.description
 
+    def save(self, *args, **kwargs): # new
+        self.order = self.id
+        return super().save(*args, **kwargs)
