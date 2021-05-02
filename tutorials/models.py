@@ -21,6 +21,11 @@ class Tutorial(models.Model):
     def __str__(self):
       return self.tutorial_text
 
+    def get_subject(self):
+        return self.category.subject
+
+    get_subject.short_description = 'Subjects'
+
     def delete(self, *args, **kwargs):
         category.Catergory.objects.filter(id=self.category.id).update(tuitorials_number=F('tuitorials_number') - 1)
         return super().delete(*args, **kwargs)

@@ -3,6 +3,27 @@ from .models import Tutorial, Contentblock
 from django import forms
 from django.utils.translation import ngettext
 from django.contrib import messages
+from categories.models import Catergory
+
+class SubjectsListFilter(admin.SimpleListFilter):
+    title = 'category'
+    parameter_name = 'category'
+    default_value = None
+    related_filter_parameter = 'category__subject__id__exact'
+    def lookups(self, request, model_admin):
+        list_of_questions = []
+        queryset = Catergory.objects.order_by('subject_id')
+        if self.related_filter_parameter in request.GET:
+            queryset = queryset.filter(subject_id=request.GET[self.related_filter_parameter])
+        for category in queryset:
+            list_of_questions.append((str(category.id), category.category_text))
+        return sorted(list_of_questions, key=lambda tp: tp[1])
+
+    def queryset(self, request, queryset):
+        if self.value():
+            return queryset.filter(category_id=self.value())
+        return queryset
+
 
 class TutorialAdminForm(forms.ModelForm):
     class Meta:
@@ -17,8 +38,8 @@ class ContentblockAdminForm(forms.ModelForm):
 class TutorialAdmin(admin.ModelAdmin):
     change_form_template = 'admin/tutorials/my_change_form.html'
     form = TutorialAdminForm
-    list_display = ('tutorial_text', 'category', 'is_active', 'created_by' )
-    list_filter = ('category', 'is_active')
+    list_display = ('tutorial_text', 'category', 'get_subject', 'is_active', 'created_by' )
+    list_filter = ('category__subject', SubjectsListFilter, 'is_active')
     prepopulated_fields = {'url_friendly_text': ('tutorial_text',)}
     search_fields = ("tutorial_text__startswith", )
 
