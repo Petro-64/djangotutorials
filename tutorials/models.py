@@ -1,6 +1,8 @@
 from django.db import models
 from categories import models as category
 from django.db.models import F
+import time
+import math
 
 
 class Tutorial(models.Model):
@@ -36,16 +38,19 @@ class Contentblock(models.Model):
     def __str__(self):
       return self.description
 
-
 class Contentcontent(models.Model):
     content = models.CharField(max_length=3000)
     is_visible = models.BooleanField(default=False)
-    tutorial = models.ForeignKey(Tutorial, on_delete=models.CASCADE, default=1)
-    contentblock = models.ForeignKey(Contentblock, on_delete=models.CASCADE, default=1)
+    tutorial_id = models.ForeignKey(Tutorial, on_delete=models.CASCADE, default=1)
+    block_id = models.ForeignKey(Contentblock, on_delete=models.CASCADE, default=1)
     order = models.IntegerField(default=0)
-    def __str__(self):
-      return self.description
 
-    def save(self, *args, **kwargs): # new
-        self.order = self.id
-        return super().save(*args, **kwargs)
+    def save_order(self):
+        # makes sense if ther's more to it than just setting the attribute
+        self.order = math.ceil(time.time())
+
+    def save(self, *args, **kwargs):
+        self.save_order()        
+        super(Contentcontent, self).save(*args, **kwargs)
+
+

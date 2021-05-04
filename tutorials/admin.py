@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Tutorial, Contentblock
+from .models import Tutorial, Contentblock, Contentcontent
 from django import forms
 from django.utils.translation import ngettext
 from django.contrib import messages
@@ -34,6 +34,14 @@ class ContentblockAdminForm(forms.ModelForm):
     class Meta:
         model = Contentblock
         fields = "__all__"
+
+class ContentcontentAdminForm(forms.ModelForm):
+    class Meta:
+        model = Contentcontent
+        fields = ('content', 'is_visible', 'tutorial_id', 'block_id')
+
+class ContentcontentAdmin(admin.ModelAdmin):
+    form = ContentcontentAdminForm
 
 class TutorialAdmin(admin.ModelAdmin):
     change_form_template = 'admin/tutorials/my_change_form.html'
@@ -70,5 +78,13 @@ class ContentblockAdmin(admin.ModelAdmin):
 
 admin.site.register(Tutorial, TutorialAdmin )
 admin.site.register(Contentblock )
+admin.site.register(Contentcontent, ContentcontentAdmin )
+
+
+    #content = models.CharField(max_length=3000)
+    #is_visible = models.BooleanField(default=False)
+    #tutorial_id = models.ForeignKey(Tutorial, on_delete=models.CASCADE, default=1)
+    #block_id = models.ForeignKey(Contentblock, on_delete=models.CASCADE, default=1)
+    #order = models.IntegerField(default=0)
 
 
