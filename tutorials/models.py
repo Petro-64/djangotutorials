@@ -40,17 +40,27 @@ class Contentblock(models.Model):
 
 class Contentcontent(models.Model):
     content = models.CharField(max_length=3000)
+    mediapath = models.CharField(max_length=3000, default='')
     is_visible = models.BooleanField(default=False)
     tutorial_id = models.ForeignKey(Tutorial, on_delete=models.CASCADE, default=1)
     block_id = models.ForeignKey(Contentblock, on_delete=models.CASCADE, default=1)
     order = models.IntegerField(default=0)
 
+    def get_block(self):
+        return self.block_id
+
+    def tutorial(self):
+        return self.tutorial_id
+
     def save_order(self):
-        # makes sense if ther's more to it than just setting the attribute
+        # this is for being able to change order later, just swap 
         self.order = math.ceil(time.time())
 
     def save(self, *args, **kwargs):
         self.save_order()        
         super(Contentcontent, self).save(*args, **kwargs)
+    
+    def __str__(self):
+      return self.content
 
 

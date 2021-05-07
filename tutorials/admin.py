@@ -1,5 +1,7 @@
 from django.contrib import admin
 from .models import Tutorial, Contentblock, Contentcontent
+from subjects import models as subject
+from categories import models as category
 from django import forms
 from django.utils.translation import ngettext
 from django.contrib import messages
@@ -40,16 +42,39 @@ class ContentcontentAdminForm(forms.ModelForm):
         model = Contentcontent
         fields = ('content', 'is_visible', 'tutorial_id', 'block_id')
 
+class ContentcontentInline(admin.TabularInline):
+    model = Contentcontent
+
 class ContentcontentAdmin(admin.ModelAdmin):
     form = ContentcontentAdminForm
+    list_display = ['get_block', 'tutorial', 'is_visible' ]
+
+def add_extra_context(model, request, args, kwargs):#this is for injecting subj id, categ id into tutorial change form. look at TutorialAdmin
+        kwargs.setdefault("extra_context", {})
+        objid = request.resolver_match.kwargs['object_id']#gives current object id
+        catId = Tutorial.objects.filter(pk=objid).values_list('category_id')[0][0]#gives current object parent id
+        subId = category.Catergory.objects.filter(pk=catId).values_list('subject_id')[0][0]#gives current object parent id
+        kwargs["extra_context"]["objId"] = objid
+        kwargs["extra_context"]["catId"] = catId
+        kwargs["extra_context"]["subId"] = subId
+        #kwargs["extra_context"]["category"] = request.resolver_match.kwargs['object_id']
 
 class TutorialAdmin(admin.ModelAdmin):
+    inlines = [
+        ContentcontentInline,
+    ]
     change_form_template = 'admin/tutorials/my_change_form.html'
     form = TutorialAdminForm
     list_display = ('tutorial_text', 'category', 'get_subject', 'is_active', 'created_by' )
     list_filter = ('category__subject', SubjectsListFilter, 'is_active')
     prepopulated_fields = {'url_friendly_text': ('tutorial_text',)}
     search_fields = ("tutorial_text__startswith", )
+
+
+    def change_view(self, request, *args, **kwargs):
+        add_extra_context(self.model, request, args, kwargs)
+        return super(TutorialAdmin, self).change_view(request, *args, **kwargs)
+
 
     @admin.action(description='Mark Selected Tutorial as Active')
     def make_active(self, request, queryset):
@@ -77,7 +102,7 @@ class ContentblockAdmin(admin.ModelAdmin):
     list_display = ('description', 'is_visible')
 
 admin.site.register(Tutorial, TutorialAdmin )
-admin.site.register(Contentblock )
+admin.site.register(Contentblock, ContentblockAdmin )
 admin.site.register(Contentcontent, ContentcontentAdmin )
 
 

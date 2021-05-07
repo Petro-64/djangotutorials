@@ -5,6 +5,9 @@
 <script src="{% url 'admin:jsi18n' %}"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script type="text/javascript">
+var subject_Id = "{{ subId }}";
+var category_Id = "{{ catId }}";//
+var objId = "{{ objId }}";
 $(function () {
   function getCategories(categoryId){
     var jqxhrCat = $.getJSON( "/getCategories/" + categoryId, function() {})
@@ -17,23 +20,34 @@ $(function () {
       $("select#id_category").html(optionsCategory);
     })
   }
+  //////////////////////////////////////////////////
   var jqxhr = $.getJSON( "/getSubjects", function() {})
   .done(function(data) {
     var options = [];
     for (var i = 0; i < data.length; i++) {
-    options +=
-    '<option value="' + data[i].id + '">' + data[i].subject_text + "</option>";
+      options += '<option value="' + data[i].id + '">' + data[i].subject_text + "</option>";
     }
     $("select#id_subjectToChoose").html(options);
     $("select#id_category").html('');
     var ii = $("select#id_subjectToChoose").val();
-    console.log("val = ", ii)
     getCategories(ii)
   });
+  /////////////////////////////////
   $("#id_subjectToChoose").on("change", function () {
     getCategories($(this).val())
   })
+  /////////////////////////////////////////
   $(".related-widget-wrapper-link").hide();
+  ////////////////////////////////////////
+  setTimeout(function(){
+    if(subject_Id){
+      $('#id_subjectToChoose').val(subject_Id);
+      getCategories(subject_Id)
+      setTimeout(function(){
+          $('#id_category').val(category_Id);
+      }, 500)
+    }
+  }, 100)
 });
 </script>
 {{ media }}
