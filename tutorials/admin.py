@@ -6,6 +6,9 @@ from django import forms
 from django.utils.translation import ngettext
 from django.contrib import messages
 from categories.models import Catergory
+from django.db import models
+from django.http import HttpResponse
+from django.urls import path
 
 class SubjectsListFilter(admin.SimpleListFilter):
     title = 'category'
@@ -40,14 +43,42 @@ class ContentblockAdminForm(forms.ModelForm):
 class ContentcontentAdminForm(forms.ModelForm):
     class Meta:
         model = Contentcontent
-        fields = ('content', 'is_visible', 'tutorial_id', 'block_id')
+        fields = ('content', 'mediapath', 'is_visible', 'tutorial_id', 'block_id')
 
-class ContentcontentInline(admin.TabularInline):
-    model = Contentcontent
+
+def add_extra_context_contentcontent(model, request, args, kwargs):#this is for injecting subj id, categ id into tutorial change form. look at TutorialAdmin
+        kwargs.setdefault("extra_context", {})
+        GET = request.GET.copy()
+        ggg = GET.pop('tutorial_id', ['000'])
+        if ggg[0] != '000':
+            catId = Tutorial.objects.filter(pk=ggg[0]).values_list('category_id')[0][0]
+            catName = category.Catergory.objects.filter(pk=catId).values_list('category_text')[0][0]
+            subjId = category.Catergory.objects.filter(pk=catId).values_list('subject_id')[0][0]
+            subjName = subject.Subject.objects.filter(pk=subjId).values_list('subject_text')[0][0]
+            catName = category.Catergory.objects.filter(pk=catId).values_list('category_text')[0][0]
+
+
+            tutorialName = Tutorial.objects.filter(pk=ggg[0]).values_list('tutorial_text')[0][0]#gives current object parent id
+            kwargs["extra_context"]["tutName"] = tutorialName
+            kwargs["extra_context"]["catName"] = catName
+            kwargs["extra_context"]["subjName"] = subjName
+            kwargs["extra_context"]["subjId"] = subjId
+            
+
+        kwargs["extra_context"]["tutid"] = ggg[0]
+
 
 class ContentcontentAdmin(admin.ModelAdmin):
+    change_list_template = 'admin/tutorials/my_change_list.html'
     form = ContentcontentAdminForm
     list_display = ['get_block', 'tutorial', 'is_visible' ]
+    ordering = ['tutorial_id']
+
+    def changelist_view(self, request, *args, **kwargs):
+        add_extra_context_contentcontent(self.model, request, args, kwargs)
+        return super(ContentcontentAdmin, self).changelist_view(request, *args, **kwargs)
+
+
 
 def add_extra_context(model, request, args, kwargs):#this is for injecting subj id, categ id into tutorial change form. look at TutorialAdmin
         kwargs.setdefault("extra_context", {})
@@ -60,12 +91,9 @@ def add_extra_context(model, request, args, kwargs):#this is for injecting subj 
         #kwargs["extra_context"]["category"] = request.resolver_match.kwargs['object_id']
 
 class TutorialAdmin(admin.ModelAdmin):
-    inlines = [
-        ContentcontentInline,
-    ]
     change_form_template = 'admin/tutorials/my_change_form.html'
     form = TutorialAdminForm
-    list_display = ('tutorial_text', 'category', 'get_subject', 'is_active', 'created_by' )
+    list_display = ('tutorial_text', 'category', 'get_subject', 'fill_tutorial', 'is_active', 'created_by' )
     list_filter = ('category__subject', SubjectsListFilter, 'is_active')
     prepopulated_fields = {'url_friendly_text': ('tutorial_text',)}
     search_fields = ("tutorial_text__startswith", )
@@ -101,15 +129,30 @@ class ContentblockAdmin(admin.ModelAdmin):
     form = ContentblockAdminForm
     list_display = ('description', 'is_visible')
 
+class DummyModel(models.Model):
+
+    #class Meta:
+        verbose_name_plural = 'Dummy Model'
+        app_label = 'tutorials'
+
+
+def my_custom_view(request):
+    return HttpResponse('Admin Custom View')
+
+class DummyModelAdmin(admin.ModelAdmin):
+    model = DummyModel
+    change_form_template = 'admin/tutorials/my_change_form.html'
+    def get_urls(self):
+        view_name = '{}_{}_changelist'.format(self.model._meta.app_label, self.model._meta.model_name)
+        return [
+            path('my_admin_path/', my_custom_view, name=view_name),
+        ]
+
+
 admin.site.register(Tutorial, TutorialAdmin )
 admin.site.register(Contentblock, ContentblockAdmin )
 admin.site.register(Contentcontent, ContentcontentAdmin )
+admin.site.register(DummyModel, DummyModelAdmin)
 
-
-    #content = models.CharField(max_length=3000)
-    #is_visible = models.BooleanField(default=False)
-    #tutorial_id = models.ForeignKey(Tutorial, on_delete=models.CASCADE, default=1)
-    #block_id = models.ForeignKey(Contentblock, on_delete=models.CASCADE, default=1)
-    #order = models.IntegerField(default=0)
 
 

@@ -3,6 +3,9 @@ from categories import models as category
 from django.db.models import F
 import time
 import math
+from django.utils.html import format_html
+from django.urls import reverse
+from django.utils.http import urlencode
 
 
 class Tutorial(models.Model):
@@ -23,8 +26,21 @@ class Tutorial(models.Model):
     def __str__(self):
       return self.tutorial_text
 
+    def fill_tutorial(self):
+        #/admin/tutorials/tutorial/17/change/
+        url = (
+            reverse("admin:tutorials_contentcontent_changelist")
+            + "?"
+            + urlencode({"tutorial_id": f"{self.id}"})
+        )
+        #return format_html("<a href='/admin/tutorials/tutorial/{}/change/'>Edit</a>", self.id)
+        return format_html('<a href="{}">Fill tutorial</a>', url)
+
     def get_subject(self):
         return self.category.subject
+
+    def get_category(self):
+        return self.category
 
     get_subject.short_description = 'Subjects'
 
