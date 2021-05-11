@@ -29,7 +29,6 @@ class SubjectsListFilter(admin.SimpleListFilter):
             return queryset.filter(category_id=self.value())
         return queryset
 
-
 class TutorialAdminForm(forms.ModelForm):
     class Meta:
         model = Tutorial
@@ -56,20 +55,16 @@ def add_extra_context_contentcontent(model, request, args, kwargs):#this is for 
             subjId = category.Catergory.objects.filter(pk=catId).values_list('subject_id')[0][0]
             subjName = subject.Subject.objects.filter(pk=subjId).values_list('subject_text')[0][0]
             catName = category.Catergory.objects.filter(pk=catId).values_list('category_text')[0][0]
-
-
             tutorialName = Tutorial.objects.filter(pk=ggg[0]).values_list('tutorial_text')[0][0]#gives current object parent id
             kwargs["extra_context"]["tutName"] = tutorialName
             kwargs["extra_context"]["catName"] = catName
             kwargs["extra_context"]["subjName"] = subjName
             kwargs["extra_context"]["subjId"] = subjId
-            
-
         kwargs["extra_context"]["tutid"] = ggg[0]
 
 
 class ContentcontentAdmin(admin.ModelAdmin):
-    change_list_template = 'admin/tutorials/my_change_list.html'
+    change_list_template = 'admin/tutorials/my_change_list_contentcontent.html'
     form = ContentcontentAdminForm
     list_display = ['get_block', 'tutorial', 'is_visible' ]
     ordering = ['tutorial_id']
