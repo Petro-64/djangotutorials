@@ -94,6 +94,14 @@
             <h1>{{ title }}</h1>
           {% else %}
             <h1>Tutorial id: {{ tutid }},  {{ subjName }} / {{ catName }} / {{ tutName }}</h1>
+            <p>Here you can add new infoblock to the current tutorial</p>
+            <select id="contentblockId">
+            {% for contentblock in contentblocksList %}
+              <option value={{ contentblock.0 }}>{{ contentblock.1 }}</option>
+            {% endfor %}
+            </select>
+            <button id="addBlockButton">Add block to current tutorial</button>
+            <br/><br/>
           {% endif %}
 
           <!--My changes end-->
@@ -112,6 +120,27 @@
         {% block footer %}<div id="footer"></div>{% endblock %}
       </div>
     </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
+    <script>
+      $(function () {
+        var csrftoken = Cookies.get('csrftoken');
+        var titId = "{{ tutid }}";
+        function addBlock(blockId){
+            $.ajax({method: "post", url: "/add/", headers: {'X-CSRFToken': csrftoken}, data:{block_id: blockId, tutorial_id: titId}, success: function(result){
+              //location.reload();
+            }, error: function(data){
+              alert(data)
+            }});
+        }
+        $("#addBlockButton").click(function(){
+          var blockId = $("#contentblockId").val();
+          addBlock(blockId);
+        })
+
+
+      })
+    </script>
 </div>
 <!-- END Container -->
 </body>

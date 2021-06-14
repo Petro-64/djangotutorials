@@ -68,6 +68,12 @@ class Contentcontent(models.Model):
     def tutorial(self):
         return self.tutorial_id
 
+    def block_up(self):
+        return format_html('<a href="#" class="link-move-up" data-contentid="{}">Move up</a>', self.id)
+    
+    def block_down(self):
+        return format_html('<a href="#" class="link-move-down" data-contentid="{}">Move down</a>', self.id)    
+
     def save_order(self):
         # this is for being able to change order later, just swap 
         self.order = math.ceil(time.time())

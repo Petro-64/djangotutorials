@@ -26,4 +26,5 @@ urlpatterns = [
     path('blog/', views.blog, name='blog'),
     path('getSubjects/', views.get_subject),
     path('getCategories/<int:key_id>', views.get_categories),
+    path('add/', views.add, name='add')  #add new block
 ]

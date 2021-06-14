@@ -9,6 +9,7 @@ from categories.models import Catergory
 from django.db import models
 from django.http import HttpResponse
 from django.urls import path
+from .myfunctions import add_extra_context_contentcontent, add_extra_context
 
 class SubjectsListFilter(admin.SimpleListFilter):
     title = 'category'
@@ -44,51 +45,21 @@ class ContentcontentAdminForm(forms.ModelForm):
         model = Contentcontent
         fields = ('content', 'mediapath', 'is_visible', 'tutorial_id', 'block_id')
 
-
-def add_extra_context_contentcontent(model, request, args, kwargs):#this is for injecting subj id, categ id into tutorial change form. look at TutorialAdmin
-        kwargs.setdefault("extra_context", {})
-        GET = request.GET.copy()
-        ggg = GET.pop('tutorial_id', ['000'])
-        if ggg[0] != '000':
-            catId = Tutorial.objects.filter(pk=ggg[0]).values_list('category_id')[0][0]
-            catName = category.Catergory.objects.filter(pk=catId).values_list('category_text')[0][0]
-            subjId = category.Catergory.objects.filter(pk=catId).values_list('subject_id')[0][0]
-            subjName = subject.Subject.objects.filter(pk=subjId).values_list('subject_text')[0][0]
-            catName = category.Catergory.objects.filter(pk=catId).values_list('category_text')[0][0]
-            tutorialName = Tutorial.objects.filter(pk=ggg[0]).values_list('tutorial_text')[0][0]#gives current object parent id
-            kwargs["extra_context"]["tutName"] = tutorialName
-            kwargs["extra_context"]["catName"] = catName
-            kwargs["extra_context"]["subjName"] = subjName
-            kwargs["extra_context"]["subjId"] = subjId
-        kwargs["extra_context"]["tutid"] = ggg[0]
-
-
 class ContentcontentAdmin(admin.ModelAdmin):
     change_list_template = 'admin/tutorials/my_change_list_contentcontent.html'
     form = ContentcontentAdminForm
-    list_display = ['get_block', 'tutorial', 'is_visible' ]
+    list_display = ['get_block', 'block_up', 'block_down','tutorial', 'is_visible' ]
     ordering = ['tutorial_id']
+    list_filter = ['tutorial_id']
 
     def changelist_view(self, request, *args, **kwargs):
         add_extra_context_contentcontent(self.model, request, args, kwargs)
         return super(ContentcontentAdmin, self).changelist_view(request, *args, **kwargs)
 
-
-
-def add_extra_context(model, request, args, kwargs):#this is for injecting subj id, categ id into tutorial change form. look at TutorialAdmin
-        kwargs.setdefault("extra_context", {})
-        objid = request.resolver_match.kwargs['object_id']#gives current object id
-        catId = Tutorial.objects.filter(pk=objid).values_list('category_id')[0][0]#gives current object parent id
-        subId = category.Catergory.objects.filter(pk=catId).values_list('subject_id')[0][0]#gives current object parent id
-        kwargs["extra_context"]["objId"] = objid
-        kwargs["extra_context"]["catId"] = catId
-        kwargs["extra_context"]["subId"] = subId
-        #kwargs["extra_context"]["category"] = request.resolver_match.kwargs['object_id']
-
 class TutorialAdmin(admin.ModelAdmin):
     change_form_template = 'admin/tutorials/my_change_form.html'
     form = TutorialAdminForm
-    list_display = ('tutorial_text', 'category', 'get_subject', 'fill_tutorial', 'is_active', 'created_by' )
+    list_display = ('tutorial_text', 'fill_tutorial', 'category', 'get_subject',  'is_active', 'created_by' )
     list_filter = ('category__subject', SubjectsListFilter, 'is_active')
     prepopulated_fields = {'url_friendly_text': ('tutorial_text',)}
     search_fields = ("tutorial_text__startswith", )
